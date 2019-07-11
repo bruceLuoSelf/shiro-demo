@@ -1,15 +1,21 @@
 package com.luo.shiro;
 
+import com.luo.dao.entity.Permission;
+import com.luo.dao.entity.Role;
 import com.luo.dao.entity.User;
 import com.luo.service.UserService;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  * @author ljn
@@ -20,16 +26,6 @@ public class CustomRealm extends AuthorizingRealm {
 
     @Autowired
     private UserService userService;
-
-    /**
-     * 授权
-     * @param principalCollection
-     * @return
-     */
-    @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        return null;
-    }
 
     /**
      * 认证
@@ -51,6 +47,38 @@ public class CustomRealm extends AuthorizingRealm {
         //4.返回身份处理对象
         return simpleAuthenticationInfo;
     }
+
+    /**
+     * 授权
+     * @param principal
+     * @return
+     */
+    @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principal) {
+        //获取当前登录的用户
+        User user = (User) principal.getPrimaryPrincipal();
+        //通过SimpleAuthenticationInfo做授权
+        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+        List<Role> roleList = user.getRoleList();
+        if (CollectionUtils.isEmpty(roleList)) {
+            return authorizationInfo;
+        }
+        //添加角色
+        for (Role role : roleList) {
+            authorizationInfo.addRole(role.getRoleName());
+            List<Permission> permissionList = role.getPermissionList();
+            if (CollectionUtils.isEmpty(permissionList)) {
+                continue;
+            }
+            //添加权限
+            for (Permission permission : permissionList) {
+                authorizationInfo.addStringPermission(permission.getPermissionName());
+            }
+        }
+        return authorizationInfo;
+    }
+
+
 
 
 }

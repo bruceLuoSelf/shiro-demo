@@ -16,9 +16,6 @@ public class UserService {
     private UserMapper userMapper;
 
     public User getUser(String userName) {
-        User user = new User();
-        user.setUsername(userName);
-        User result = userMapper.selectOne(user);
-        return result;
+        return userMapper.selectByUserName(userName);
     }
 }

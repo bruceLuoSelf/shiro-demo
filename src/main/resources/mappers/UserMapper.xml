@@ -9,5 +9,17 @@
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="password_salt" jdbcType="VARCHAR" property="passwordSalt" />
+
+    <association property="roleList" column="id" select="selectRoleList"/>
   </resultMap>
+
+  <select id="selectByUserName" parameterType="string" resultMap="BaseResultMap">
+    select * from user where username = #{userName}
+  </select>
+
+  <select id="selectRoleList" parameterType="long" resultMap="com.luo.dao.mapper.RoleMapper.BaseResultMap">
+    select c.* from user a join user_role b on a.id = b.user_id join role c on b.role_id = c.id;
+  </select>
+
+
 </mapper>

@@ -1,6 +1,10 @@
 package com.luo.dao.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.util.List;
 
 public class User {
     @Id
@@ -10,6 +14,16 @@ public class User {
     private String username;
 
     private String password;
+
+    private List<Role> roleList;
+
+    public List<Role> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<Role> roleList) {
+        this.roleList = roleList;
+    }
 
     @Column(name = "password_salt")
     private String passwordSalt;
