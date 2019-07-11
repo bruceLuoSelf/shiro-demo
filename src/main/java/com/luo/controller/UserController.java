@@ -1,6 +1,6 @@
 package com.luo.controller;
 
-import com.luo.shiro.MyShiro;
+import com.luo.shiro.MyShiroDemo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,10 +17,10 @@ import java.util.Map;
 public class UserController {
 
     @Autowired
-    private MyShiro myShiro;
+    private MyShiroDemo myShiroDemo;
 
     @GetMapping("login")
     public Map<String,Object> login(String userName, String password) {
-        return myShiro.login(userName, password);
+        return myShiroDemo.login(userName, password);
     }
 }

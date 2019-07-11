@@ -18,7 +18,7 @@ import java.util.Map;
  * @date 2019/7/11.
  */
 @Component
-public class MyShiro {
+public class MyShiroDemo {
 
     public Map<String, Object> login(String userName, String password) {
         Map<String, Object> resultMap = new LinkedHashMap<>();
