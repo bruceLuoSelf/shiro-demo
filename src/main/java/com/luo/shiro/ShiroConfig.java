@@ -30,7 +30,7 @@ public class ShiroConfig {
 
         //authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问,先配置anon再配置authc。
         //配置退出过滤器logout，由shiro实现
-        filterChainMap.put("/logout","logout");
+        filterChainMap.put("user/logout","logout");
         filterChainMap.put("/login.html","anon");
         filterChainMap.put("/user/login","anon");
         filterChainMap.put("/**", "authc");

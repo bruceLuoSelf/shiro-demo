@@ -1,5 +1,6 @@
 package com.luo.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.luo.dao.entity.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -31,6 +33,12 @@ public class UserController {
         return  currentUser;
     }
 
+    /**
+     * 登陆
+     * @param userName
+     * @param password
+     * @return
+     */
     @GetMapping("login")
     public Map<String,Object> login(String userName, String password) {
         Map<String, Object> resultMap = new LinkedHashMap<>();
@@ -53,5 +61,31 @@ public class UserController {
             token.clear();
             return resultMap;
         }
+    }
+
+    /**
+     * 获取当前用户信息
+     * @return
+     */
+    @GetMapping("getUserInfo")
+    public String getCurrentUser() {
+        return JSONObject.toJSONString(currentUser());
+    }
+
+    /**
+     * 退出登陆
+     * @return
+     */
+    @GetMapping("logout")
+    public Map<String,Object> logout() {
+        Map<String,Object> resultMap = new HashMap<>();
+        try{
+            Subject subject = SecurityUtils.getSubject();
+            subject.logout();
+            resultMap.put("msg" , "退出成功");
+        } catch (Exception e) {
+            resultMap.put("msg" , e.getMessage());
+        }
+        return resultMap;
     }
 }
