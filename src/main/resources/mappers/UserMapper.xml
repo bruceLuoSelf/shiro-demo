@@ -18,7 +18,7 @@
   </select>
 
   <select id="selectRoleList" parameterType="long" resultMap="com.luo.dao.mapper.RoleMapper.BaseResultMap">
-    select c.* from user a join user_role b on a.id = b.user_id join role c on b.role_id = c.id;
+    select c.* from user a join user_role b on a.id = b.user_id join role c on b.role_id = c.id and a.id= #{id}
   </select>
 
 

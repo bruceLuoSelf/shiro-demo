@@ -7,6 +7,8 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -88,4 +90,18 @@ public class UserController {
         }
         return resultMap;
     }
+
+    @GetMapping("/sing")
+    @RequiresRoles("主管")
+    public String sing(){
+        return "sing";
+    }
+
+    @GetMapping("/jump")
+    @RequiresPermissions("jump")
+    public String jump(){
+        return "jump";
+    }
+
+
 }
