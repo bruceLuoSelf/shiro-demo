@@ -1,5 +1,7 @@
 package com.luo;
 
+import com.luo.dao.entity.User;
+import com.luo.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -10,6 +12,7 @@ import org.apache.shiro.util.Factory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -43,6 +46,14 @@ public class ShiroDemoApplicationTests {
 
 		//6、退出
 		subject.logout();
+	}
+
+	@Autowired
+	private UserService userService;
+	@Test
+	public void test1() {
+		User user = userService.getUser("zhang");
+		System.out.println(user);
 	}
 
 }

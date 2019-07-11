@@ -1,11 +1,15 @@
 package com.luo.shiro;
 
+import com.luo.dao.entity.User;
+import com.luo.service.UserService;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author ljn
@@ -13,6 +17,9 @@ import org.apache.shiro.subject.PrincipalCollection;
  * 自定义realm类实现，业务逻辑
  */
 public class CustomRealm extends AuthorizingRealm {
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 授权
@@ -32,22 +39,18 @@ public class CustomRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-//        //1.获取用户输入的账号
-//        String username = (String)token.getPrincipal();
-//        //2.通过username从数据库中查找到user实体
-//        User user = getUserByUserName(username);
-//        if(user == null){
-//            return null;
-//        }
-//        //3.通过SimpleAuthenticationInfo做身份处理
-//        SimpleAuthenticationInfo simpleAuthenticationInfo =
-//                new SimpleAuthenticationInfo(user,user.getPassword(),getName());
-//        //4.用户账号状态验证等其他业务操作
-//        if(!user.getAvailable()){
-//            throw new AuthenticationException("该账号已经被禁用");
-//        }
-//        //5.返回身份处理对象
-//        return simpleAuthenticationInfo;
-        return null;
+        //1.获取用户输入的账号
+        String username = (String)token.getPrincipal();
+        //2.通过username从数据库中查找到user实体
+        User user = userService.getUser(username);
+        if(user == null){
+            return null;
+        }
+        //3.通过SimpleAuthenticationInfo做身份处理
+        SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(user,user.getPassword(),getName());
+        //4.返回身份处理对象
+        return simpleAuthenticationInfo;
     }
+
+
 }

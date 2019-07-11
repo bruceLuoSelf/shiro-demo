@@ -32,7 +32,7 @@
         <javaClientGenerator targetPackage="${targetMapperPackage}" targetProject="${targetJavaProject}" type="XMLMAPPER" />
         <!-- 要生成的那些表 -->
 
-        <table tableName="users" domainObjectName="User" >
+        <table tableName="user" domainObjectName="User" >
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 
