@@ -2,6 +2,7 @@ package com.luo.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.luo.dao.entity.User;
+import com.luo.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -10,6 +11,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +32,9 @@ import java.util.Map;
 @RequestMapping("user")
 public class UserController {
 
+    @Autowired
+    private UserService userService;
+
     /**
      * shiro获取当前用户
      * @return
@@ -46,11 +51,12 @@ public class UserController {
      * @return
      */
     @GetMapping("login")
-    public Map<String,Object> login(String userName, String password, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public Map<String,Object> login(String userName, String password, boolean rememberMe, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Map<String, Object> resultMap = new LinkedHashMap<>();
         UsernamePasswordToken token = new UsernamePasswordToken(userName,password);
         Subject subject = SecurityUtils.getSubject();
         try {
+            token.setRememberMe(rememberMe);
             //主体提交登录请求到SecurityManager
             subject.login(token);
         }catch (IncorrectCredentialsException ice){
@@ -96,6 +102,22 @@ public class UserController {
             resultMap.put("msg" , e.getMessage());
         }
         return resultMap;
+    }
+
+    /**
+     * 注册账号
+     * @param userName
+     * @param password
+     * @return
+     */
+    @GetMapping("register")
+    public String register(String userName, String password) {
+        try{
+            userService.register(userName, password);
+        }catch (RuntimeException e) {
+            return e.getMessage();
+        }
+        return "注册成功";
     }
 
     @GetMapping("/sing")

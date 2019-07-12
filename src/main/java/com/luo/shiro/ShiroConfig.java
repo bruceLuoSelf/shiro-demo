@@ -1,9 +1,13 @@
 package com.luo.shiro;
 
+import com.luo.redis.LoginRedis;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
@@ -52,7 +56,10 @@ public class ShiroConfig {
         filterChainMap.put("user/logout","logout");
         filterChainMap.put("/login.html","anon");
         filterChainMap.put("/403.html","anon");
+        filterChainMap.put("/register.html","anon");
         filterChainMap.put("/user/login","anon");
+        filterChainMap.put("/user/register","anon");
+
         filterChainMap.put("/**", "authc");
 
         //设置拦截请求后跳转的URL.
@@ -68,7 +75,21 @@ public class ShiroConfig {
     @Bean
     public CustomRealm customRealm() {
         CustomRealm customRealm = new CustomRealm();
+        customRealm.setCredentialsMatcher(hashedCredentialsMatcher());
         return customRealm;
+    }
+
+    /**
+     * 密码加密算法设置
+     * @return
+     */
+    @Bean
+    public HashedCredentialsMatcher hashedCredentialsMatcher(){
+        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+        hashedCredentialsMatcher.setHashAlgorithmName("md5");
+        //散列的次数
+//        hashedCredentialsMatcher.setHashIterations(2);
+        return hashedCredentialsMatcher;
     }
 
     @Bean
@@ -80,6 +101,8 @@ public class ShiroConfig {
         securityManager.setSessionManager(SessionManager());
         // 自定义缓存实现 使用redis
         securityManager.setCacheManager(cacheManager());
+        // 使用记住我
+        securityManager.setRememberMeManager(rememberMeManager());
         return securityManager;
     }
 
@@ -123,7 +146,7 @@ public class ShiroConfig {
      * @return
      */
     public RedisManager redisManager() {
-        RedisManager redisManager = new RedisManager();
+        RedisManager redisManager = new LoginRedis();
         redisManager.setHost(host);
         redisManager.setPassword(password);
         redisManager.setPort(port);
@@ -160,6 +183,32 @@ public class ShiroConfig {
         sessionManager.setSessionDAO(redisSessionDAO());
         return sessionManager;
     }
+
+    /**
+     * cookie对象;
+     * @return
+     */
+    public SimpleCookie rememberMeCookie(){
+        //这个参数是cookie的名称，对应前端的checkbox的name = rememberMe
+        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+        //cookie生效时间30天,单位秒;
+        simpleCookie.setMaxAge(2592000);
+        return simpleCookie;
+    }
+
+    /**
+     * cookie管理对象;记住我功能
+     * @return
+     */
+    public CookieRememberMeManager rememberMeManager(){
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(rememberMeCookie());
+        // cookieRememberMeManager.setCipherKey用来设置加密的Key,参数类型byte[],字节数组长度要求16
+        // cookieRememberMeManager.setCipherKey(Base64.decode("3AvVhmFLUs0KTA3Kprsdag=="));
+        cookieRememberMeManager.setCipherKey("妙妙".getBytes());
+        return cookieRememberMeManager;
+    }
+
 
     /**
      * 用于thymeleaf模板使用shiro标签
