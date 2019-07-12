@@ -137,10 +137,10 @@ public class UserController {
     public String dog(){
         Subject subject = SecurityUtils.getSubject();
         if(subject.hasRole("主管")){
-            return "主管√";
+            return "dog";
         }
         else {
-            return  "主管×";
+            return  "dog×";
         }
     }
 
@@ -148,10 +148,10 @@ public class UserController {
     public String cat(){
         Subject subject = SecurityUtils.getSubject();
         if(subject.hasRole("主管")){
-            return "主管√";
+            return "cat";
         }
         else {
-            return  "主管×";
+            return  "cat×";
         }
     }
     @GetMapping("/rap")
