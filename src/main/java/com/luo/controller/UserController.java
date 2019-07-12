@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -42,7 +45,7 @@ public class UserController {
      * @return
      */
     @GetMapping("login")
-    public Map<String,Object> login(String userName, String password) {
+    public Map<String,Object> login(String userName, String password, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Map<String, Object> resultMap = new LinkedHashMap<>();
         UsernamePasswordToken token = new UsernamePasswordToken(userName,password);
         Subject subject = SecurityUtils.getSubject();
@@ -58,6 +61,7 @@ public class UserController {
         }
         if(subject.isAuthenticated()){
             resultMap.put("currentUser",currentUser());
+            response.sendRedirect("/success.html");
             return resultMap;
         }else{
             token.clear();
@@ -101,6 +105,38 @@ public class UserController {
     @RequiresPermissions("jump")
     public String jump(){
         return "jump";
+    }
+
+
+    @GetMapping("/dog")
+    public String dog(){
+        Subject subject = SecurityUtils.getSubject();
+        if(subject.hasRole("主管")){
+            return "主管√";
+        }
+        else {
+            return  "主管×";
+        }
+    }
+
+    @GetMapping("/cat")
+    public String cat(){
+        Subject subject = SecurityUtils.getSubject();
+        if(subject.hasRole("主管")){
+            return "主管√";
+        }
+        else {
+            return  "主管×";
+        }
+    }
+    @GetMapping("/rap")
+    public String rap() {
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isPermitted("rap")) {
+            return "rap";
+        } else {
+            return "没权限你Rap个锤子啊!";
+        }
     }
 
 

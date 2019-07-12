@@ -1,6 +1,5 @@
 package com.luo.shiro;
 
-import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -43,7 +42,7 @@ public class ShiroConfig {
         filterChainMap.put("/**", "authc");
 
         //设置拦截请求后跳转的URL.
-        shiroFilterFactoryBean.setLoginUrl("/login");
+        shiroFilterFactoryBean.setLoginUrl("/login.html");
         //登录成功后要跳转的链接
         shiroFilterFactoryBean.setSuccessUrl("/success.html");
         //未授权界面 错误页面，认证不通过跳转
