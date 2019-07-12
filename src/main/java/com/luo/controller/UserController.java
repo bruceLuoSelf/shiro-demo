@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class UserController {
      * @return
      */
     @GetMapping("login")
-    public Map<String,Object> login(String userName, String password, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public Map<String,Object> login(String userName, String password, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Map<String, Object> resultMap = new LinkedHashMap<>();
         UsernamePasswordToken token = new UsernamePasswordToken(userName,password);
         Subject subject = SecurityUtils.getSubject();
@@ -62,6 +63,8 @@ public class UserController {
         if(subject.isAuthenticated()){
             resultMap.put("currentUser",currentUser());
             response.sendRedirect("/success.html");
+//            RequestDispatcher requestDispatcher = request.getRequestDispatcher("success.html");
+//            requestDispatcher.forward(request, response);
             return resultMap;
         }else{
             token.clear();

@@ -55,6 +55,7 @@ public class CustomRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principal) {
+        System.out.println("-------------认证用户---------------");
         //获取当前登录的用户
         User user = (User) principal.getPrimaryPrincipal();
         //通过SimpleAuthenticationInfo做授权

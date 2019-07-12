@@ -1,8 +1,9 @@
 package com.luo.dao.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
-public class Permission {
+public class Permission implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
