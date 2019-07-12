@@ -1,6 +1,5 @@
 package com.luo.shiro;
 
-import com.luo.redis.LoginRedis;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -146,7 +145,7 @@ public class ShiroConfig {
      * @return
      */
     public RedisManager redisManager() {
-        RedisManager redisManager = new LoginRedis();
+        RedisManager redisManager = new RedisManager();
         redisManager.setHost(host);
         redisManager.setPassword(password);
         redisManager.setPort(port);
